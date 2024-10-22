@@ -49,6 +49,19 @@ app.get('/read/usernames', (req: UserRequest, res: Response) => {
   res.send(usernames);
 });
 
+app.use('/read/username', addMsgToRequest);
+app.get('/read/username/:name', (req: UserRequest, res: Response) => {
+  const name = req.params.name
+  let users = req.users?.filter(function(u) {return u.username === name})
+  if(users?.length === 0) {
+    res.send({error: {message: `${name} not found`, status: 404}})
+  } else {
+    res.send(users)
+  }
+  
+})
+
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/write/adduser', addMsgToRequest);
